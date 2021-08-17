@@ -1,4 +1,5 @@
 // test/main.js
+require('@babel/register');
 var should = require('should');
 var nodeExcel = require('../index');
 
