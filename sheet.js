@@ -102,36 +102,31 @@ Sheet.prototype.generate = function () {
 
 module.exports = Sheet;
 
-var startTag = function (obj, tagName, closed) {
-    var result = "<" + tagName,
-        p;
-    for (p in obj) {
-        result += " " + p + "=" + obj[p];
-    }
-    if (!closed) result += ">";
-    else result += "/>";
-    return result;
-};
-
-var endTag = function (tagName) {
-    return "</" + tagName + ">";
-};
-
 var addNumberCell = function (cellRef, value, styleIndex) {
     styleIndex = styleIndex || 0;
-    if (value === null) return "";
-    else return '<x:c r="' + cellRef + '" s="' + styleIndex + '" t="n"><x:v>' + value + "</x:v></x:c>";
+    if (value == null) return "";
+    return '<x:c r="' + cellRef + '" s="' + styleIndex + '" t="n"><x:v>' + value + "</x:v></x:c>";
 };
+
+var JSDateToExcelDate = function (inDate) {
+	if (inDate instanceof Date) {
+		const returnDateTime = 25569.0 + ((inDate.getTime() - (inDate.getTimezoneOffset() * 60 * 1000)) / (1000 * 60 * 60 * 24));
+		return returnDateTime.toString().substr(0, 20);
+	}
+
+	return inDate;
+}
 
 var addDateCell = function (cellRef, value, styleIndex) {
     styleIndex = styleIndex || 1;
-    if (value === null) return "";
-    else return '<x:c r="' + cellRef + '" s="' + styleIndex + '" t="n"><x:v>' + value + "</x:v></x:c>";
+    if (value == null) return "";
+
+    return '<x:c r="' + cellRef + '" s="' + styleIndex + '" t="n"><x:v>' + JSDateToExcelDate(value) + "</x:v></x:c>";
 };
 
 var addBoolCell = function (cellRef, value, styleIndex) {
     styleIndex = styleIndex || 0;
-    if (value === null) return "";
+    if (value == null) return "";
     if (value) {
         value = 1;
     } else value = 0;
@@ -140,7 +135,7 @@ var addBoolCell = function (cellRef, value, styleIndex) {
 
 var addStringCell = function (sheet, cellRef, value, styleIndex) {
     styleIndex = styleIndex || 0;
-    if (value === null) return "";
+    if (value == null) return "";
     if (typeof value === "string") {
         value = value.replace(/&/g, "&amp;").replace(/'/g, "&apos;").replace(/>/g, "&gt;").replace(/</g, "&lt;");
     }
